@@ -20,16 +20,21 @@ jobs:
       - name: Extract Android project
         run: |
           ZIP_FILE=$(find . -maxdepth 1 -name '*.zip' | head -n 1)
+
           if [ -z "$ZIP_FILE" ]; then
             echo "找不到 Android 專案 ZIP"
             exit 1
           fi
+
           unzip -o "$ZIP_FILE" -d .
 
       - name: Commit extracted files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md build.gradle settings.gradle gradle.properties app .github/workflows/build-apk.yml
+
+          git add README.md build.gradle settings.gradle gradle.properties app
+
           git diff --cached --quiet || git commit -m "Extract Coco Android project"
+
           git push
