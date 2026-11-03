@@ -26,7 +26,11 @@ jobs:
             exit 1
           fi
 
-          unzip -o "$ZIP_FILE" -d .
+          # 移除錯誤建立的同名資料夾
+          rm -rf .github/workflows/build-apk.yml
+
+          # 解壓縮，但暫時不覆蓋 APK 工作流程
+          unzip -o "$ZIP_FILE" -d . -x '.github/workflows/build-apk.yml'
 
       - name: Commit extracted files
         run: |
@@ -34,7 +38,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add README.md build.gradle settings.gradle gradle.properties app
+          git add -A .github/workflows/build-apk.yml
 
-          git diff --cached --quiet || git commit -m "Extract Coco Android project"
-
+          git diff --cached --quiet || git commit -m "Fix Coco project extraction"
           git push
